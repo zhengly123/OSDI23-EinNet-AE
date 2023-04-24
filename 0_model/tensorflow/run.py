@@ -17,9 +17,11 @@ if not os.path.exists(f'log/{gpu}'):
     os.makedirs(f'log/{gpu}')
 
 names = ["infogan", "fsrcnn", "csrnet", "resnet18", "gcn",  "dcgan"]
-basepath = "/mnt/auxHome/models/einnet/"
-subfix = ".bs{}.onnx"
+env = os.environ.copy()
+basepath = env['MODEL_DIR'] # set env var before running
 
+print(f"model dir {basepath}")
+subfix = ".bs{}.onnx"
 onnxs = []
 for bs in [1, 16]:
     for name in names:

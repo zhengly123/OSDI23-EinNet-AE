@@ -1,6 +1,8 @@
 export NVIDIA_TF32_OVERRIDE=0
 cwd=`pwd`
-ModelDir=/path/to/onnx/models
+ModelDir=${MODEL_DIR:-/path/to/model}
+echo "ONNX Model dir is" $ModelDir
+
 for Device in 0 1; do
 	if [[ $Device -eq 0 ]]; then
 		DeviceName="A100"
@@ -10,7 +12,7 @@ for Device in 0 1; do
 	export CUDA_VISIBLE_DEVICES=$Device
 	for i in ${ModelDir}/infogan.bs*.onnx ${ModelDir}/gcn.bs*.onnx ${ModelDir}/csrnet.bs*.onnx ${ModelDir}/resnet18.bs*.onnx ${ModelDir}/dcgan.bs*.onnx ${ModelDir}/unet.bs*.onnx; do
 	# for i in  ${ModelDir}/gcn.bs*.onnx; do
-		log_dir=220417_default_workspace_log_trt_${DeviceName}_cuDNN8.0_`hostname`_`basename $i` 
+		log_dir=log/default_workspace_log_trt_${DeviceName}_cuDNN8.0_`hostname`_`basename $i` 
 		mkdir $log_dir
 		echo $log_dir
 		# trtexec --separateProfileRun --noTF32 --dumpProfile --iterations=100 --duration=0 --onnx=$i > log.txt
@@ -19,4 +21,4 @@ for Device in 0 1; do
 		mv env.txt log.txt trace.json prof.json $log_dir           
 	done
 done
-egrep "GPU Compute Time: m|\] min.*ms$" 220417_default_workspace_log_*/log.txt
+egrep "GPU Compute Time: m|\] min.*ms$" default_workspace_log_*/log.txt
