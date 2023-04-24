@@ -1,6 +1,6 @@
 export NVIDIA_TF32_OVERRIDE=0
 cwd=`pwd`
-ModelDir=/home/zly/models
+ModelDir=/path/to/onnx/models
 for Device in 0 1; do
 	if [[ $Device -eq 0 ]]; then
 		DeviceName="A100"
@@ -8,8 +8,8 @@ for Device in 0 1; do
 		DeviceName="V100"
 	fi
 	export CUDA_VISIBLE_DEVICES=$Device
-	# for i in ${ModelDir}/infogan.bs*.onnx ${ModelDir}/gcn.bs*.onnx ${ModelDir}/csrnet.bs*.onnx ${ModelDir}/resnet18.bs*.onnx ${ModelDir}/dcgan.bs*.onnx ${ModelDir}/unet.bs*.onnx; do
-	for i in  ${ModelDir}/gcn.bs*.onnx; do
+	for i in ${ModelDir}/infogan.bs*.onnx ${ModelDir}/gcn.bs*.onnx ${ModelDir}/csrnet.bs*.onnx ${ModelDir}/resnet18.bs*.onnx ${ModelDir}/dcgan.bs*.onnx ${ModelDir}/unet.bs*.onnx; do
+	# for i in  ${ModelDir}/gcn.bs*.onnx; do
 		log_dir=220417_default_workspace_log_trt_${DeviceName}_cuDNN8.0_`hostname`_`basename $i` 
 		mkdir $log_dir
 		echo $log_dir
