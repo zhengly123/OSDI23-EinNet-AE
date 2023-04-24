@@ -1,4 +1,4 @@
-TEST_SCRIPT=/home/hsh/test-nimble/experiment/run_inference.py
+TEST_SCRIPT=$NNET_HOME/0_model/nimble/experiment/run_inference.py
 
 # bs = 1
 python $TEST_SCRIPT infogan --bs 1 --mode nimble
