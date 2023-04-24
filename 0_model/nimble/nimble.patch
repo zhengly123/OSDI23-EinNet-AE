@@ -1,0 +1,43 @@
+diff --git a/experiment/utils.py b/experiment/utils.py
+index 7ecd87fc12..e97805ecc7 100644
+--- a/experiment/utils.py
++++ b/experiment/utils.py
+@@ -148,6 +148,7 @@ class BlockingInferenceWrapperBase(InferenceWrapperBase):
+     def measure(self):
+         start_time = time.time()
+         self.launch()
++        torch.cuda.synchronize()
+         end_time = time.time()
+         self.elapsed = (end_time - start_time) * 1000
+ 
+diff --git a/torch/csrc/jit/passes/fold_conv_cat_bn.cpp b/torch/csrc/jit/passes/fold_conv_cat_bn.cpp
+index f9cdd1867e..9430a81193 100644
+--- a/torch/csrc/jit/passes/fold_conv_cat_bn.cpp
++++ b/torch/csrc/jit/passes/fold_conv_cat_bn.cpp
+@@ -101,7 +101,13 @@ std::tuple<at::Tensor, at::Tensor> computeUpdatedConvWeightAndBias(
+     const ConvBNParameters& p) {
+   at::NoGradGuard no_grad;
+   at::Tensor bn_var_rsqrt = at::rsqrt(p.bn_rv + p.bn_eps);
+-  at::Tensor new_w = p.conv_w * (p.bn_w * bn_var_rsqrt).reshape({-1, 1, 1, 1});
++  at::Tensor new_w;
++  if (p.conv_w.sizes()[0] != p.bn_w.sizes()[0]) {
++    // assume to be convTranspose
++    new_w = p.conv_w * (p.bn_w * bn_var_rsqrt).reshape({1, -1, 1, 1});
++  } else {
++    new_w = p.conv_w * (p.bn_w * bn_var_rsqrt).reshape({-1, 1, 1, 1});
++  }
+   at::Tensor new_b = (p.conv_b - p.bn_rm) * bn_var_rsqrt * p.bn_w + p.bn_b;
+   return std::make_tuple(new_w, new_b);
+ }
+diff --git a/torch/cuda/nimble.py b/torch/cuda/nimble.py
+index 04ec851573..020a1c3e6e 100644
+--- a/torch/cuda/nimble.py
++++ b/torch/cuda/nimble.py
+@@ -399,6 +399,7 @@ def select_conv(conv, x):
+     def _no_cudnn_forward(self, input):
+         with torch_set_cudnn_enabled(False):
+             return self._conv_forward(input, self.weight)
++    return _cudnn_forward # All baselines should use the same backend
+ 
+     # for dilated convolutions, use cuDNN
+     if conv.dilation != (1, 1):

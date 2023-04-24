@@ -1,3 +1,9 @@
+### Requirements
+
+* tensorflow==2.4
+* tensorflow-xla
+
+
 ### How to run Tensorflow
 
 ```
