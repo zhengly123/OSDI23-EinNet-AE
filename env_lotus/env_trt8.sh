@@ -1,0 +1,10 @@
+# Set tensorrt
+export TRT_ROOT=/home/osdi23ae/TensorRT-8.2.0.6/
+export LD_LIBRARY_PATH=$TRT_ROOT/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$TRT_ROOT/lib:$LIBRARY_PATH
+export C_INCLUDE_PATH=$TRT_ROOT/include:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$TRT_ROOT/include:$CPLUS_INCLUDE_PATH
+export PATH=$TRT_ROOT/bin/:$PATH
+
+export TRT_PLUGIN_LIB=/home/osdi23ae/TensorRT-8.2.0.6/TensorRT/build/out/ 
+export LD_LIBRARY_PATH=$TRT_PLUGIN_LIB:$TRT_LIB:$LD_LIBRARY_PATH

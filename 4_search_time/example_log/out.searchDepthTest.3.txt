@@ -1,0 +1,78 @@
+Running main() from /home/zly/InfiniTensor_merge/3rd-party/googletest/googletest/src/gtest_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from OpSearch
+[ RUN      ] OpSearch.Conv3x3
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:106: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 3
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 3
+#Candidates = 8
+#Intermediate states = 446
+#Hashed intermediate states = 383
+#Iteratos = 561
+#Tensors = 268
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.Conv3x3 (18 ms)
+[ RUN      ] OpSearch.ConvTranspose
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:182: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 3
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 3
+#Candidates = 8
+#Intermediate states = 1024
+#Hashed intermediate states = 846
+#Iteratos = 1110
+#Tensors = 588
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.ConvTranspose (59 ms)
+[ RUN      ] OpSearch.Conv5x5
+==== Derivator statistics ====
+Max Depth = 3
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 3
+#Candidates = 13
+#Intermediate states = 1358
+#Hashed intermediate states = 1203
+#Iteratos = 1724
+#Tensors = 503
+#Print and Exit mode = 0
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:223: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+[  FAILED  ] OpSearch.Conv5x5 (47 ms)
+[ RUN      ] OpSearch.G2BMM
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:257: Failure
+Expected: (derivator.getNumCandidates()) >= (1), actual: 0 vs 1
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:260: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 3
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 3
+#Candidates = 0
+#Intermediate states = 134
+#Hashed intermediate states = 106
+#Iteratos = 208
+#Tensors = 90
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.G2BMM (5 ms)
+[----------] 4 tests from OpSearch (131 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (131 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 4 tests, listed below:
+[  FAILED  ] OpSearch.Conv3x3
+[  FAILED  ] OpSearch.ConvTranspose
+[  FAILED  ] OpSearch.Conv5x5
+[  FAILED  ] OpSearch.G2BMM
+
+ 4 FAILED TESTS

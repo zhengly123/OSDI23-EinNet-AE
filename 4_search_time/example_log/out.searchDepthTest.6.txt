@@ -1,0 +1,67 @@
+Running main() from /home/zly/InfiniTensor_merge/3rd-party/googletest/googletest/src/gtest_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from OpSearch
+[ RUN      ] OpSearch.Conv3x3
+==== Derivator statistics ====
+Max Depth = 6
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 6
+#Candidates = 1176
+#Intermediate states = 45506
+#Hashed intermediate states = 33662
+#Iteratos = 48095
+#Tensors = 26422
+#Print and Exit mode = 0
+[       OK ] OpSearch.Conv3x3 (1981 ms)
+[ RUN      ] OpSearch.ConvTranspose
+==== Derivator statistics ====
+Max Depth = 6
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 6
+#Candidates = 5165
+#Intermediate states = 192079
+#Hashed intermediate states = 142600
+#Iteratos = 178228
+#Tensors = 109967
+#Print and Exit mode = 0
+[       OK ] OpSearch.ConvTranspose (11264 ms)
+[ RUN      ] OpSearch.Conv5x5
+==== Derivator statistics ====
+Max Depth = 6
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 6
+#Candidates = 2303
+#Intermediate states = 490470
+#Hashed intermediate states = 379956
+#Iteratos = 534916
+#Tensors = 199497
+#Print and Exit mode = 0
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:223: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+[  FAILED  ] OpSearch.Conv5x5 (21382 ms)
+[ RUN      ] OpSearch.G2BMM
+==== Derivator statistics ====
+Max Depth = 6
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 6
+#Candidates = 3
+#Intermediate states = 6846
+#Hashed intermediate states = 4361
+#Iteratos = 7664
+#Tensors = 4189
+#Print and Exit mode = 0
+[       OK ] OpSearch.G2BMM (258 ms)
+[----------] 4 tests from OpSearch (34887 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (34887 ms total)
+[  PASSED  ] 3 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] OpSearch.Conv5x5
+
+ 1 FAILED TEST

@@ -1,0 +1,70 @@
+Running main() from /home/zly/InfiniTensor_merge/3rd-party/googletest/googletest/src/gtest_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from OpSearch
+[ RUN      ] OpSearch.Conv3x3
+==== Derivator statistics ====
+Max Depth = 4
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 4
+#Candidates = 56
+#Intermediate states = 2340
+#Hashed intermediate states = 1895
+#Iteratos = 2878
+#Tensors = 1395
+#Print and Exit mode = 0
+[       OK ] OpSearch.Conv3x3 (96 ms)
+[ RUN      ] OpSearch.ConvTranspose
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:182: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 4
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 4
+#Candidates = 88
+#Intermediate states = 6205
+#Hashed intermediate states = 4941
+#Iteratos = 6727
+#Tensors = 3503
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.ConvTranspose (354 ms)
+[ RUN      ] OpSearch.Conv5x5
+==== Derivator statistics ====
+Max Depth = 4
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 4
+#Candidates = 92
+#Intermediate states = 11423
+#Hashed intermediate states = 9695
+#Iteratos = 14142
+#Tensors = 4160
+#Print and Exit mode = 0
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:223: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+[  FAILED  ] OpSearch.Conv5x5 (434 ms)
+[ RUN      ] OpSearch.G2BMM
+==== Derivator statistics ====
+Max Depth = 4
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 4
+#Candidates = 1
+#Intermediate states = 635
+#Hashed intermediate states = 452
+#Iteratos = 837
+#Tensors = 353
+#Print and Exit mode = 0
+[       OK ] OpSearch.G2BMM (24 ms)
+[----------] 4 tests from OpSearch (910 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (910 ms total)
+[  PASSED  ] 2 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] OpSearch.ConvTranspose
+[  FAILED  ] OpSearch.Conv5x5
+
+ 2 FAILED TESTS

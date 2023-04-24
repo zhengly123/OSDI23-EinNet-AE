@@ -1,0 +1,100 @@
+False False
+11.0 True 8003
+=== infogan 1
+infogan ====================
+        mean (ms)  stdev (ms)
+nimble   0.131015    0.001199
+False False
+11.0 True 8003
+=== fsrcnn 1
+fsrcnn ====================
+        mean (ms)  stdev (ms)
+nimble   0.150789    0.000882
+False False
+11.0 True 8003
+=== GCN 1
+GCN ====================
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+        mean (ms)  stdev (ms)
+nimble  11.508644     0.00639
+False False
+11.0 True 8003
+=== csrnet 1
+csrnet ====================
+        mean (ms)  stdev (ms)
+nimble   1.640477     0.00249
+False False
+11.0 True 8003
+=== resnet18 1
+resnet18 ====================
+        mean (ms)  stdev (ms)
+nimble   1.356606    0.106903
+False False
+11.0 True 8003
+=== dcgan 1
+dcgan ====================
+        mean (ms)  stdev (ms)
+nimble   0.148764    0.000654
+False False
+11.0 True 8003
+=== infogan 16
+infogan ====================
+        mean (ms)  stdev (ms)
+nimble   1.908145    0.382959
+False False
+11.0 True 8003
+=== fsrcnn 16
+fsrcnn ====================
+        mean (ms)  stdev (ms)
+nimble   0.608021    0.001147
+False False
+11.0 True 8003
+=== GCN 16
+GCN ====================
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+Skip initialize_weights
+        mean (ms)  stdev (ms)
+nimble  24.816013    0.010534
+False False
+11.0 True 8003
+=== csrnet 16
+csrnet ====================
+        mean (ms)  stdev (ms)
+nimble   4.409147    0.009804
+False False
+11.0 True 8003
+=== resnet18 16
+resnet18 ====================
+        mean (ms)  stdev (ms)
+nimble   3.879817    0.010253
+False False
+11.0 True 8003
+=== dcgan 16
+dcgan ====================
+        mean (ms)  stdev (ms)
+nimble   1.548337    0.037599

@@ -5,15 +5,18 @@ import logging
 import numpy as np
 import tvm
 from tvm import te, auto_scheduler, topi, autotvm
-from tvm.topi.testing import conv2d_nchw_python
-import tvm.testing
+# from tvm.topi.testing import conv2d_nchw_python
+# from tvm.topi.cuda.conv2d import schedule_conv2d_nchw
+# from tvm.topi.cuda.batch_matmul import schedule_batch_matmul
+# from tvm.topi.cuda.conv2d_transpose import schedule_conv2d_transpose_nchw
+# import tvm.testing
 import re
 
 ######################################################################
 # Define the computation
 dtype = "float32"
 target = "cuda"
-log_filename = "op.autotvm.log"
+log_filename = "result_op_autotvm_a100/op.autotvm.log"
 
 np.random.seed(0)
 
@@ -52,6 +55,7 @@ def op_conv2D_transpose(n, c, h, w, f, r, s, padding, stride, dilation, output_p
     #     stride, stride), padding=padding, out_dtype=dtype, output_padding=output_padding)
     return ("conv2d_transpose_nchw.cuda", [data, kernel, (stride, stride), padding, dtype, output_padding])
 
+
 def print_best_time(tuner, inputs, results):
     if not hasattr(tuner, 'best_time'):
         tuner.best_time = 999999999
@@ -63,7 +67,9 @@ def print_best_time(tuner, inputs, results):
             result_msg = res
             t = np.mean(res.costs)
             tuner.best_time = min(tuner.best_time, t)
-    print(f'===== best time {tuner.best_time * 1000} ms, perf {tuner.best_flops} Gflops, FLOPs {tuner.best_time * tuner.best_flops}')
+    print(
+        f'===== best time {tuner.best_time * 1000} ms, perf {tuner.best_flops} Gflops, FLOPs {tuner.best_time * tuner.best_flops}')
+
 
 def autotvm_tune(tasks):
     with tvm.target.Target(target):
@@ -83,13 +89,37 @@ def autotvm_tune(tasks):
             tuner.tune(
                 n_trial=1024,
                 measure_option=measure_option,
-                callbacks=[autotvm.callback.log_to_file(log_filename), print_best_time],
+                callbacks=[autotvm.callback.log_to_file(
+                    log_filename), print_best_time],
             )
             # inspect the best config
             dispatch_context = autotvm.apply_history_best(log_filename)
             best_config = dispatch_context.query(task.target, task.workload)
             print("\nBest config:")
             print(best_config)
+
+
+def autotvm_load(task, params):
+    print(f'Config space = {task.config_space}')
+    # inspect the best config
+    dispatch_context = autotvm.apply_history_best(log_filename)
+    best_config = dispatch_context.query(task.target, task.workload)
+    print("\nBest config:")
+    print(best_config)
+    sch, arg_bufs = task.instantiate(best_config)
+    func = tvm.build(sch, arg_bufs)
+
+    device = tvm.runtime.cuda()
+    ctx = tvm.cuda()
+    tensors = arg_bufs
+    tvm_tensors = []
+    for t in tensors:
+        shape = [int(v) for v in t.shape]
+        a_np = np.random.uniform(size=shape).astype(np.float32)
+        a_tvm = tvm.nd.array(a_np, device=device)
+        tvm_tensors.append(a_tvm)
+    evaluator = func.time_evaluator(func.entry_name, ctx, number=200)
+    print(f"{params[-1]} Time: {evaluator(*tvm_tensors).mean*1000} ms")
 
 
 task_parameters = [
@@ -105,8 +135,6 @@ task_parameters = [
     # Conv5x5 -> Conv3x3 # SRCNN
     (op_conv2D, (16, 32, 224, 224, 1, 5, 5, 2, 1, 1), "Conv5x5_origin"),
     (op_conv2D, (16, 32, 224, 224, 4, 3, 3, 2, 1, 1), "Conv5x5_opt"),
-    (op_conv2D_winograd, (16, 32, 224, 224, 4, 3, 3,
-     2, 1, 1), "Conv5x5_opt_winograd"),  # Winograd
 ]
 
 tasks = []
@@ -116,15 +144,11 @@ for fn, params, desc in task_parameters:
     tasks.append(autotvm.task.create(task_name, args, target))
 print('# of tasks = %d' % (len(tasks)))
 
-# Tuning
-autotvm_tune(tasks)
+# # Tuning
+# autotvm_tune(tasks)
 
-# # Evaluating
-# for task in tasks:
-#     ansor_load(task)
-# #     # ansor_dump_all_logs(task)
-#     print('\n'*5)
-
-# Customize the topi schedule (disable loop unroll)
-# for params in task_parameters:
-#     mock_ansor_schedule(*params)
+# Evaluating
+with tvm.target.cuda():
+    for task, params in zip(tasks, task_parameters):
+        autotvm_load(task, params)
+        print('\n'*5)

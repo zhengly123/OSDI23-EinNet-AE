@@ -217,10 +217,3 @@ def tune(model_path, backend, device):
 
 
 tune(args.model, args.backend, args.target)
-
-# models='infogan gcn csrnet resnet18 dcgan srcnn fsrcnn'.split()
-# pid = int(args.pid)
-# assert pid >=0 and pid<len(models)
-# for pid in range(7):
-#     tune(f'/home/zly/einnet_models/{models[pid]}.bs1.onnx', 'cublas', 'sm_70')
-#     tune(f'/home/zly/einnet_models/{models[pid]}.bs16.onnx', 'cublas', 'sm_70')

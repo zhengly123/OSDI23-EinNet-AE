@@ -1,12 +1,20 @@
 #!/bin/bash
-# GCC for nvcc
-export PATH=/home/spack/spack/opt/spack/linux-ubuntu22.04-broadwell/gcc-9.4.0/gcc-9.4.0-st36klijpsnquihiy463hmedsyhoc3g6/bin:$PATH
-# Default FP32 for cuDNN
+
+export MODEL_DIR=/mnt/auxHome/models/einnet/
+source ../../env_lotus/env_tvm-v10.sh
+
 export NVIDIA_TF32_OVERRIDE=0
-for model in infogan fsrcnn gcn csrnet resnet18 dcgan; do
-for bs in 1 16; do
-for backend in cublas ansor; do
-    python3 run_onnx_tvm.py /mnt/auxHome/models/einnet/$model.bs$bs.onnx $backend sm_70
+ModelDir=${MODEL_DIR:-/path/to/model}
+echo "ONNX Model dir is" $ModelDir
+
+for model in infogan dcgan fsrcnn gcn resnet18 csrnet longformer-part1 longformer-part2; do
+    for bs in 1 16; do
+	 	fn=${ModelDir}/${model}.bs${bs}.onnx
+		echo $fn
+		log_dir=log/log_tvm_$(hostname)_${model}_${bs}
+		mkdir -p $log_dir
+        python3 run_onnx_tvm.py $ModelDir/$model.bs$bs.onnx cublas sm_80 > ${log_dir}/log.txt
+	done
 done
-done
-done
+
+tail -n3 log/log_tvm_$(hostname)_*/log.txt

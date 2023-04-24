@@ -1,0 +1,61 @@
+Running main() from /home/zly/InfiniTensor_merge/3rd-party/googletest/googletest/src/gtest_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from OpSearch
+[ RUN      ] OpSearch.Conv3x3
+==== Derivator statistics ====
+Max Depth = 7
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 7
+#Candidates = 4800
+#Intermediate states = 157966
+#Hashed intermediate states = 113255
+#Iteratos = 149523
+#Tensors = 97790
+#Print and Exit mode = 0
+[       OK ] OpSearch.Conv3x3 (7159 ms)
+[ RUN      ] OpSearch.ConvTranspose
+==== Derivator statistics ====
+Max Depth = 7
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 7
+#Candidates = 32550
+#Intermediate states = 901440
+#Hashed intermediate states = 656476
+#Iteratos = 748905
+#Tensors = 549965
+#Print and Exit mode = 0
+[       OK ] OpSearch.ConvTranspose (53603 ms)
+[ RUN      ] OpSearch.Conv5x5
+==== Derivator statistics ====
+Max Depth = 7
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 7
+#Candidates = 9805
+#Intermediate states = 2227699
+#Hashed intermediate states = 1645195
+#Iteratos = 2238788
+#Tensors = 1072231
+#Print and Exit mode = 0
+[       OK ] OpSearch.Conv5x5 (101286 ms)
+[ RUN      ] OpSearch.G2BMM
+==== Derivator statistics ====
+Max Depth = 7
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 7
+#Candidates = 3
+#Intermediate states = 18286
+#Hashed intermediate states = 11576
+#Iteratos = 18822
+#Tensors = 11824
+#Print and Exit mode = 0
+[       OK ] OpSearch.G2BMM (714 ms)
+[----------] 4 tests from OpSearch (162764 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (162764 ms total)
+[  PASSED  ] 4 tests.

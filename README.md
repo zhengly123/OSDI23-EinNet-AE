@@ -1,0 +1,1 @@
+For a quick evaluation, we provide a server with required hardware, software dependence, and basline frameworks. On the provided server, `run.sh` in each directory produces the evaluating results. to To run them on other environments, environment variables in the scripts should be updated.

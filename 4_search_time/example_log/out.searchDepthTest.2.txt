@@ -1,0 +1,82 @@
+Running main() from /home/zly/InfiniTensor_merge/3rd-party/googletest/googletest/src/gtest_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from OpSearch
+[ RUN      ] OpSearch.Conv3x3
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:103: Failure
+Expected: (derivator.getNumCandidates()) >= (1), actual: 0 vs 1
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:106: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 2
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 2
+#Candidates = 0
+#Intermediate states = 78
+#Hashed intermediate states = 72
+#Iteratos = 126
+#Tensors = 57
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.Conv3x3 (4 ms)
+[ RUN      ] OpSearch.ConvTranspose
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:178: Failure
+Expected: (derivator.getNumCandidates()) >= (1), actual: 0 vs 1
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:182: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 2
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 2
+#Candidates = 0
+#Intermediate states = 155
+#Hashed intermediate states = 136
+#Iteratos = 186
+#Tensors = 98
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.ConvTranspose (10 ms)
+[ RUN      ] OpSearch.Conv5x5
+==== Derivator statistics ====
+Max Depth = 2
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 2
+#Candidates = 4
+#Intermediate states = 152
+#Hashed intermediate states = 143
+#Iteratos = 201
+#Tensors = 65
+#Print and Exit mode = 0
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:223: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+[  FAILED  ] OpSearch.Conv5x5 (6 ms)
+[ RUN      ] OpSearch.G2BMM
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:257: Failure
+Expected: (derivator.getNumCandidates()) >= (1), actual: 0 vs 1
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:260: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 2
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 2
+#Candidates = 0
+#Intermediate states = 24
+#Hashed intermediate states = 22
+#Iteratos = 39
+#Tensors = 18
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.G2BMM (1 ms)
+[----------] 4 tests from OpSearch (23 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (23 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 4 tests, listed below:
+[  FAILED  ] OpSearch.Conv3x3
+[  FAILED  ] OpSearch.ConvTranspose
+[  FAILED  ] OpSearch.Conv5x5
+[  FAILED  ] OpSearch.G2BMM
+
+ 4 FAILED TESTS

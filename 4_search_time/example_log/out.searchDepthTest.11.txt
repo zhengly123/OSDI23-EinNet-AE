@@ -1,0 +1,67 @@
+Running main() from /home/zly/InfiniTensor_merge/3rd-party/googletest/googletest/src/gtest_main.cc
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from OpSearch
+[ RUN      ] OpSearch.Conv3x3
+==== Derivator statistics ====
+Max Depth = 11
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 11
+#Candidates = 87239
+#Intermediate states = 3572343
+#Hashed intermediate states = 2557378
+#Iteratos = 2579828
+#Tensors = 3331695
+#Print and Exit mode = 0
+[       OK ] OpSearch.Conv3x3 (174781 ms)
+[ RUN      ] OpSearch.ConvTranspose
+/home/zly/InfiniTensor_merge/test/nnet/test_OpSearch.cc:182: Failure
+Expected: (nMatches) >= (1), actual: 0 vs 1
+==== Derivator statistics ====
+Max Depth = 11
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 11
+#Candidates = 5201961
+#Intermediate states = 106352201
+#Hashed intermediate states = 78071079
+#Iteratos = 65654447
+#Tensors = 82808809
+#Print and Exit mode = 0
+[  FAILED  ] OpSearch.ConvTranspose (6461223 ms)
+[ RUN      ] OpSearch.Conv5x5
+==== Derivator statistics ====
+Max Depth = 11
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 11
+#Candidates = 1692983
+#Intermediate states = 98211035
+#Hashed intermediate states = 71520554
+#Iteratos = 76636631
+#Tensors = 85494680
+#Print and Exit mode = 0
+[       OK ] OpSearch.Conv5x5 (4997468 ms)
+[ RUN      ] OpSearch.G2BMM
+==== Derivator statistics ====
+Max Depth = 11
+searchStrategy = DFS
+enableHashPruning = true
+Reached Max Depth during search = 11
+#Candidates = 7
+#Intermediate states = 374059
+#Hashed intermediate states = 231233
+#Iteratos = 284216
+#Tensors = 358778
+#Print and Exit mode = 0
+[       OK ] OpSearch.G2BMM (13827 ms)
+[----------] 4 tests from OpSearch (11647300 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (11647300 ms total)
+[  PASSED  ] 3 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] OpSearch.ConvTranspose
+
+ 1 FAILED TEST

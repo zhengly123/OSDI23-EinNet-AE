@@ -12,7 +12,7 @@ import re
 # Define the computation
 dtype = "float32"
 target = "cuda"
-log_filename = "conv5x5.ansor.log"
+log_filename = "result_op_ansor_a100/op.ansor.log"
 
 np.random.seed(0)
 
@@ -59,37 +59,11 @@ def ansor_tune(tasks):
     # Inspect the computational graph
     # print(task.compute_dag)
 
-    ######################################################################
-    # * :code:`measure_ctx` launches a different process for measurement to
-    #   provide isolation. It can protect the master process from GPU crashes
-    #   during measurement and avoid other runtime conflicts.
-    # * :code:`min_repeat_ms` defines the minimum duration of one "repeat" in every measurement.
-    #   This can warmup the GPU, which is necessary to get accurate measurement results.
-    #   Typically, we recommend a value > 300 ms.
-    # * :code:`num_measure_trials` is the number of measurement trials we can use during the search.
-    #   We only make 10 trials in this tutorial for a fast demonstration. In practice, 1000 is a
-    #   good value for the search to converge. You can do more trials according to your time budget.
-    # * In addition, we use :code:`RecordToFile` to dump measurement records into a file `conv2d.json`.
-    #   The measurement records can be used to query the history best, resume the search,
-    #   and do more analyses later.
-    # * see :any:`auto_scheduler.TuningOptions`,
-    #   :any:`auto_scheduler.LocalRPCMeasureContext` for more parameters.
-
     measure_ctx = auto_scheduler.LocalRPCMeasureContext(min_repeat_ms=300)
     tune_option = auto_scheduler.TuningOptions(
         # change this to 1000 to achieve the best performance
         num_measure_trials=1024*len(tasks)+1,
         runner=measure_ctx.runner,
-        # runner=auto_scheduler.RPCRunner(
-        #     "nico2_v100_32",  # change the device key to your key
-        #     "0.0.0.0",
-        #     9190,
-        #     n_parallel=7,
-        #     number=5,
-        #     repeat=1,
-        #     timeout=20,
-        #     min_repeat_ms=300,
-        # ),
         measure_callbacks=[auto_scheduler.RecordToFile(log_filename)],
         verbose=2,
     )
@@ -99,21 +73,14 @@ def ansor_tune(tasks):
     tuner.tune(tune_option)
 
 
-def ansor_load(task):
+def ansor_load(task, params):
     # print(task.workload_key, len(task.workload_key[1:]))
-    n, c, h, w, f, r, s, padding, stride, dilation = eval(task.workload_key)[
-        1:]
     print(eval(task.workload_key)[1:])
     inp, res = auto_scheduler.load_best_record(log_filename, task.workload_key)
 
-    # # Print equivalent python schedule API. This can be used for debugging and
-    # # learning the behavior of the auto-scheduler.
-    # print("Equivalent python schedule:")
-    # print(task.compute_dag.print_python_code_from_state(inp.state))
-
     # Rebuild the binary. This shows how you can apply the best schedule from a
     # log file without reruning the search again.
-    ctx = tvm.gpu()
+    ctx = tvm.cuda()
     sch, args = task.compute_dag.apply_steps_from_state(inp.state)
     func = tvm.build(sch, args, target)
 
@@ -121,44 +88,21 @@ def ansor_load(task):
     # print("\n-------GPU code-------")
     # print(func.imported_modules[0].get_source())
 
-    # check correctness
-    a_np = np.random.uniform(size=(n, c, h, w)).astype(np.float32)
-    w_np = np.random.uniform(size=(f, c, r, s)).astype(np.float32)
-    c_np = conv2d_nchw_python(a_np, w_np, stride, padding)
-    print(a_np.shape, w_np.shape, c_np.shape)
+    device = tvm.runtime.cuda()
+    ctx = tvm.cuda()
 
-    ctx = tvm.gpu()
-    a_tvm = tvm.nd.array(a_np)
-    w_tvm = tvm.nd.array(w_np)
-    c_tvm = tvm.nd.empty(c_np.shape)
-    func(a_tvm, w_tvm, c_tvm)
-    tvm.testing.assert_allclose(c_np, c_tvm.asnumpy(), rtol=1e-2)
-
+    tensors = params[0](*params[1])
+    tvm_tensors = []
+    for t in tensors:
+        print(params[0](*params[1])[0])
+        print(t.shape)
+        shape = [int(v) for v in t.shape]
+        a_np = np.random.uniform(size=shape).astype(np.float32)
+        a_tvm = tvm.nd.array(a_np, device = device)
+        tvm_tensors.append(a_tvm)
     evaluator = func.time_evaluator(func.entry_name, ctx, number=200)
     # evaluator(a_tvm, w_tvm, c_tvm)
-    print(f"Time: {evaluator(a_tvm, w_tvm, c_tvm).mean*1000} ms")
-
-    # ######################################################################
-    # # A more complicated example is to resume the search.
-    # # In this case, we need to create the search policy and cost model by ourselves
-    # # and resume the status of search policy and cost model with the log file.
-    # # In the example below we resume the status and do more 5 trials.
-
-    # cost_model = auto_scheduler.XGBModel()
-    # cost_model.update_from_file(log_file)
-    # search_policy = auto_scheduler.SketchPolicy(
-    #     task, cost_model, init_search_callbacks=[auto_scheduler.PreloadMeasuredStates(log_file)]
-    # )
-    # measure_ctx = auto_scheduler.LocalRPCMeasureContext(min_repeat_ms=300)
-    # tune_option = auto_scheduler.TuningOptions(
-    #     num_measure_trials=5,
-    #     runner=measure_ctx.runner,
-    #     measure_callbacks=[auto_scheduler.RecordToFile(log_file)],
-    # )
-    # sch, args = auto_scheduler.auto_schedule(task, search_policy, tuning_options=tune_option)
-    # Kill the measurement process
-    # del measure_ctx
-
+    print(f"{params[-1]} Time: {evaluator(*tvm_tensors).mean*1000} ms")
 
 def ansor_dump_all_logs(task):
     # print(task.workload_key, len(task.workload_key[1:]))
@@ -326,8 +270,6 @@ task_parameters = [
     # Conv5x5 -> Conv3x3
     (op_conv2D, (16, 32, 224, 224, 1, 5, 5, 2, 1, 1), "Conv5x5_origin"),
     (op_conv2D, (16, 32, 224, 224, 4, 3, 3, 2, 1, 1), "Conv5x5_opt"),
-    (op_conv2D_winograd, (16, 32, 224, 224, 4, 3, 3,
-     2, 1, 1), "Conv5x5_opt_winograd"),  # Winograd
 ]
 
 tasks = []
@@ -341,9 +283,9 @@ print('# of tasks = %d' % (len(tasks)))
 # ansor_tune(tasks)
 
 # Evaluating
-for task in tasks:
-    ansor_load(task)
-#     # ansor_dump_all_logs(task)
+for task, params in zip(tasks, task_parameters):
+    ansor_load(task, params)
+    # ansor_dump_all_logs(task)
     print('\n'*5)
 
 # Customize the topi schedule (disable loop unroll)
