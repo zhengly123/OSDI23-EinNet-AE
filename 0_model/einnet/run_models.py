@@ -16,10 +16,7 @@ def run_and_evaluate(runtime, g):
 
 
 def get_e2e_time(runtime, g, name: str):
-    if name.startswith('resnet'):
-        return get_trt_time(g)
-    else:
-        return run_and_evaluate(runtime, g)
+    return run_and_evaluate(runtime, g)
 
 
 def model_e2e_exp():

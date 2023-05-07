@@ -18,6 +18,11 @@ class CudaRuntimeObj : public RuntimeObj {
 
     bool cudaGraphStatus; // Whether CUDA graph stream capture is enabled
 
+    // CUDA device properties
+    cudaDeviceProp deviceProperties;
+
+    bool enableTF32 = false;
+
   public:
     CudaRuntimeObj();
     virtual ~CudaRuntimeObj();
@@ -54,6 +59,10 @@ class CudaRuntimeObj : public RuntimeObj {
         IT_ASSERT(size <= workspaceSize);
         return workspace;
     }
+    pair<int, int> getComputeCapacitiy() const {
+        return {deviceProperties.major, deviceProperties.minor};
+    }
+    int getNumSMs() const { return deviceProperties.multiProcessorCount; }
 
     void copyBlobFromCPU(void *dst, const void *src,
                          size_t bytes) const override {
@@ -75,7 +84,11 @@ class CudaRuntimeObj : public RuntimeObj {
     bool isInCudaGraph() const { return cudaGraphStatus; }
     cudaStream_t getStream() const { return stream; }
 
-    double timeWithCudaGraph(Graph graph, int rounds = 1000);
+    double timeWithCudaGraph(Graph graph, int rounds = 50);
+    double timeWithCudaGraph(vector<std::function<void(void)>> funcs,
+                             int rounds = 50);
+    void setEnableTF32(bool state);
+    bool getEnableTF32() const { return enableTF32; }
 
   private:
     void tune(const Graph &graph, bool profiling) const;
