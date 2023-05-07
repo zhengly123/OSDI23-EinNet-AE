@@ -1,0 +1,6 @@
+Group count: 1, Math type: 
+Input dims: 16, 32, 224, 224
+Kernel dims: 32, 4, 3, 3
+Output dims: 16, 4, 226, 224
+Time: 0.599294 ms
+Algo: CUDNN_CONVOLUTION_FWD_ALGO_WINOGRAD_NONFUSED

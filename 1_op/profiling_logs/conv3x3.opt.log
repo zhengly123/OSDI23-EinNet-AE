@@ -1,0 +1,13 @@
+Running main() from /home/zly/Work/OSDI23-EinNet-AE/3rd-party/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = *.optimized
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from op_Conv3x3
+[ RUN      ] op_Conv3x3.optimized
+Time: 0.0487479 ms
+[       OK ] op_Conv3x3.optimized (3430 ms)
+[----------] 1 test from op_Conv3x3 (3430 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (3430 ms total)
+[  PASSED  ] 1 test.
